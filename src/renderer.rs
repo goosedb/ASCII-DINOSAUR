@@ -16,8 +16,8 @@ impl Renderer {
         }
     }
     pub fn clear(&mut self) {
-        for i in self.render {
-            i = ' ';
+        for i in &mut self.render {
+            *i = ' ';
         }
     }
     pub fn put_sprite(&mut self, sprite: &Sprite, position: Coord) {
