@@ -14,8 +14,7 @@ impl Camera {
         }
     }
     pub fn move_it(&mut self, step: Coord) {
-        self.position.x += step.x;
-        self.position.y += step.y;
+        self.position = self.position + step;
     }
     pub fn get_border(&self) -> AABB {
         AABB::new(self.position, self.position + self.size)
