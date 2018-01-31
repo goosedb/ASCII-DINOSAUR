@@ -37,25 +37,11 @@ impl Renderer {
         }
     }
     pub fn present(&self) {
-        for _ in 0..WIDTH + 2 {
-        print!("-");
-        }
-        println!("");
         for h in 0..HEIGHT {
             for w in 0..WIDTH {
-                if w == 0 {
-                    print!("|");
-                }
                 print!("{}", self.render[(h * WIDTH + w) as usize]);
-                if w == WIDTH - 1 {
-                    print!("|");
-                }
             }
             println!("");
         }
-        for _ in 0..WIDTH + 2 {
-        print!("-")
-        }
-        println!("");
     }
 }
