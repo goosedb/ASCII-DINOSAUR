@@ -21,19 +21,21 @@ fn new_frame(win: &mut pancurses::Window) {
 }
 
 fn start(win: &mut pancurses::Window) {
-    let perfect_tick = Duration::from_millis(200);
+    let perfect_tick = Duration::from_millis(50);
 
-    //====================//
-    let mut alert = String::new();
-    alert += "Please set ";
-    alert += &(WIDTH + 2).to_string();
-    alert += " collumns and ";
-    alert += &(HEIGHT + 2).to_string();
-    alert += " lines\n";
-    let note = "To play press 's'";
-    //====================//
-
+    let mut fr = 'c';
     loop {
+        //====================//
+        let mut alert = String::new();
+        alert += "Please set ";
+        alert += &(WIDTH + 2).to_string();
+        alert += " collumns and ";
+        alert += &(HEIGHT + 2).to_string();
+        alert += " lines ";
+        alert += &fr.to_string();
+        let note = "\nTo play press 's' ";
+        //====================//
+
         win.mv(
             win.get_max_y() / 2,
             win.get_max_x() / 2 - (alert.len()) as i32 / 2,
@@ -47,15 +49,14 @@ fn start(win: &mut pancurses::Window) {
 
         let now = Instant::now();
 
-        let input = win.getch();
-
-        match input {
+        match win.getch() {
             Some(Input::Character(c)) => {
+                fr = c;
                 if c == 's' {
                     break;
                 }
-            },
-            Some(input) => {},
+            }
+            Some(input) => {}
             None => (),
         }
 
@@ -67,11 +68,29 @@ fn start(win: &mut pancurses::Window) {
 }
 
 fn game(win: &mut pancurses::Window) {
-    let mut running = true;
-    let perfect_tick = Duration::from_millis(20);
-    while running {
-        let now = Instant::now();
+    //let mut running = true;
+    let perfect_tick = Duration::from_millis(100);
 
+    let mut renderer = Renderer::new();
+    let mut x = 20;
+    let d = Sprite::new(
+            vec![
+                '@',' ',' ',' ',' ','@','@','@','@','@','@',' ','@','@','@','@','@','@',
+                '@','@',' ',' ','@','@','@','@','@','@','@',' ','@','@','@','@','@','@',
+                ' ','@','@','@','@','@','@','@','@','@','@','@','@','@',' ',' ',' ',' ',
+                ' ',' ',' ','@','@','@','@','@','@',' ',' ','S',' ',' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
+                ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
+            ],
+            Coord::new(18, 6));
+    renderer.put_sprite(&d, Coord::new(x, 10));
+
+    loop {
+        let now = Instant::now();
+        renderer.put_sprite(&d, Coord::new(x, 10));
+        renderer.present(win);
+        renderer.clear();
+        x += 1;
         let after = Instant::now();
         thread::sleep(perfect_tick - after.duration_since(now));
     }
@@ -85,13 +104,15 @@ fn main() {
     curs_set(0);
     window.nodelay(true);
     window.keypad(true);
-    let mut go = false;
+    //let mut go = true;
 
     start(&mut window);
-    while go {
-        game(&mut window);
-        finish(&mut go);
-    }
+    window.erase();
+    //loop {
+    game(&mut window);
+    //finish(&mut go);
+    //}
+    thread::sleep(Duration::from_secs(10));
     endwin();
     window.delwin();
 }

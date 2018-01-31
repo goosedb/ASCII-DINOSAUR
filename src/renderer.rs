@@ -2,6 +2,8 @@ use consts::*;
 use camera::*;
 use coord::*;
 use sprite::*;
+use pancurses;
+use std;
 
 pub struct Renderer {
     render: Vec<char>,
@@ -36,12 +38,16 @@ impl Renderer {
             }
         }
     }
-    pub fn present(&self) {
+    pub fn present(&self, win: &pancurses::Window) {
+        win.erase();
         for h in 0..HEIGHT {
             for w in 0..WIDTH {
-                print!("{}", self.render[(h * WIDTH + w) as usize]);
+                win.mv(h + 1, w + 1);
+                let mut s = String::new();
+                s += &self.render[(h * WIDTH + w) as usize].to_string();
+                win.printw(&s);
             }
-            println!("");
         }
+        win.refresh();
     }
 }
