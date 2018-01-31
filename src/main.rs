@@ -15,38 +15,47 @@ use std::thread;
 use std::time::{Duration, Instant};
 use pancurses::*;
 
-fn new_frame(win : &mut pancurses::Window) {
+fn new_frame(win: &mut pancurses::Window) {
     win.refresh();
     win.erase();
 }
 
-fn start(win : &mut pancurses::Window) {
+fn start(win: &mut pancurses::Window) {
     let perfect_tick = Duration::from_millis(200);
 
-    let mut s = String::new();
-    s += "Please set ";
-    s += &(WIDTH + 2).to_string();
-    s += " collumns and ";
-    s += &(HEIGHT + 2).to_string();
-    s += " lines\n";
-    
-    win.mv(win.get_max_y() / 2, win.get_max_x() / 2 - (s.len()) as i32 / 2);
-    win.printw(&s);
+    //====================//
+    let mut alert = String::new();
+    alert += "Please set ";
+    alert += &(WIDTH + 2).to_string();
+    alert += " collumns and ";
+    alert += &(HEIGHT + 2).to_string();
+    alert += " lines\n";
+    let note = "To play press 's'";
+    //====================//
 
     loop {
+        win.mv(
+            win.get_max_y() / 2,
+            win.get_max_x() / 2 - (alert.len()) as i32 / 2,
+        );
+        win.printw(&alert);
+        win.mv(
+            win.get_max_y() / 2 + 1,
+            win.get_max_x() / 2 - (note.len()) as i32 / 2,
+        );
+        win.printw(&note);
+
         let now = Instant::now();
 
         let input = win.getch();
-        
+
         match input {
             Some(Input::Character(c)) => {
                 if c == 's' {
                     break;
                 }
-            }
-            Some(Input::KeyDC) => break,
-            Some(input) => {
-            }
+            },
+            Some(input) => {},
             None => (),
         }
 
@@ -57,7 +66,7 @@ fn start(win : &mut pancurses::Window) {
     }
 }
 
-fn game(win : &mut pancurses::Window) {
+fn game(win: &mut pancurses::Window) {
     let mut running = true;
     let perfect_tick = Duration::from_millis(20);
     while running {
@@ -68,19 +77,20 @@ fn game(win : &mut pancurses::Window) {
     }
 }
 
+fn finish(go: &mut bool) {}
+
 fn main() {
     let mut window = initscr();
     noecho();
     curs_set(0);
+    window.nodelay(true);
     window.keypad(true);
     let mut go = false;
 
     start(&mut window);
     while go {
-        
         game(&mut window);
-        //finish();
-
+        finish(&mut go);
     }
     endwin();
     window.delwin();
