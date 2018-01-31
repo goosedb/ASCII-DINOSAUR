@@ -6,7 +6,9 @@ mod camera;
 mod renderer;
 mod aabb;
 mod sprite;
+mod dino;
 
+use dino::*;
 use coord::*;
 use sprite::*;
 use consts::*;
@@ -69,28 +71,18 @@ fn start(win: &mut pancurses::Window) {
 
 fn game(win: &mut pancurses::Window) {
     //let mut running = true;
-    let perfect_tick = Duration::from_millis(100);
+    let perfect_tick = Duration::from_millis(300);
 
     let mut renderer = Renderer::new();
-    let mut x = 20;
-    let d = Sprite::new(
-            vec![
-                '@',' ',' ',' ',' ','@','@','@','@','@','@',' ','@','@','@','@','@','@',
-                '@','@',' ',' ','@','@','@','@','@','@','@',' ','@','@','@','@','@','@',
-                ' ','@','@','@','@','@','@','@','@','@','@','@','@','@',' ',' ',' ',' ',
-                ' ',' ',' ','@','@','@','@','@','@',' ',' ','S',' ',' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
-                ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',
-            ],
-            Coord::new(18, 6));
-    renderer.put_sprite(&d, Coord::new(x, 10));
-
+    let mut dino = Dino::new();
     loop {
         let now = Instant::now();
-        renderer.put_sprite(&d, Coord::new(x, 10));
+        renderer.put_sprite(&dino.get_sprite(), dino.get_position());
         renderer.present(win);
         renderer.clear();
-        x += 1;
+        dino.step();
+        dino.collision_model.max = dino.collision_model.max + Coord::new(1, 0);
+        dino.collision_model.min = dino.collision_model.min + Coord::new(1, 0);
         let after = Instant::now();
         thread::sleep(perfect_tick - after.duration_since(now));
     }

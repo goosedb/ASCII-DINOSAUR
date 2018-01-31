@@ -24,6 +24,9 @@ impl Renderer {
     }
     pub fn put_sprite(&mut self, sprite: &Sprite, position: Coord) {
         for i in 0..sprite.get_size().x * sprite.get_size().y {
+            if sprite.get_pixel(i) == ' ' {
+                continue;
+            }
             let coords_origin = position - self.camera.get_border().min;
 
             let relative_coord = Coord::new(
