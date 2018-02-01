@@ -3,11 +3,10 @@ use camera::*;
 use coord::*;
 use sprite::*;
 use pancurses;
-use std;
 
 pub struct Renderer {
     render: Vec<char>,
-    camera: Camera,
+    pub camera: Camera,
 }
 
 impl Renderer {
@@ -17,11 +16,13 @@ impl Renderer {
             camera: Camera::new(Coord::new(WIDTH, HEIGHT), Coord::new(0, 0)),
         }
     }
+
     pub fn clear(&mut self) {
         for i in &mut self.render {
             *i = ' ';
         }
     }
+
     pub fn put_sprite(&mut self, sprite: &Sprite, position: Coord) {
         for i in 0..sprite.get_size().x * sprite.get_size().y {
             if sprite.get_pixel(i) == ' ' {
@@ -41,6 +42,7 @@ impl Renderer {
             }
         }
     }
+
     pub fn present(&self, win: &pancurses::Window) {
         win.erase();
         for h in 0..HEIGHT {

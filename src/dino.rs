@@ -62,9 +62,6 @@ impl Pose {
         let poses = [Pose::STRAIGHT, Pose::CROUCH];
         poses[n as usize]
     }
-    fn next(&self) -> Legs {
-        Legs::from_int((self.to_int() + 1) % 2)
-    }
 }
 
 pub struct Dino {
@@ -79,7 +76,10 @@ pub struct Dino {
 impl Dino {
     pub fn new() -> Dino {
         Dino {
-            collision_model: AABB::new(Coord::new(3, HEIGHT - 11), Coord::new(3 + 14, HEIGHT - 4)),
+            collision_model: AABB::new(
+                Coord::new(3, HEIGHT - 8 - 3),
+                Coord::new(3 + 13, HEIGHT - 4),
+            ),
             eye: Eye::SMALL,
             legs: Legs::LEFT,
             pose: Pose::STRAIGHT,
@@ -87,12 +87,16 @@ impl Dino {
             accel: Coord::new(0, -1),
         }
     }
+
     pub fn step(&mut self) {
         self.legs = self.legs.next();
     }
+
     pub fn jump(&mut self) {
         self.speed = self.speed + Coord::new(0, 3);
+        self.straight();
     }
+
     pub fn get_sprite(&self) -> Sprite {
         let mut sprite = Sprite::new(vec![' '], Coord::new(0, 0));
 
@@ -108,7 +112,7 @@ impl Dino {
                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                     ],
-                    Coord::new(13, 8), //self.collision_model.max - self.collision_model.mi
+                    self.collision_model.max - self.collision_model.min,
                 );
                 match self.legs {
                     Legs::LEFT => {
@@ -166,7 +170,28 @@ impl Dino {
         }
         sprite
     }
+
     pub fn get_position(&self) -> Coord {
         self.collision_model.min
+    }
+
+    pub fn crouch(&mut self) {
+        if self.speed.y == 0 {
+            self.pose = Pose::CROUCH;
+            self.collision_model.min = self.collision_model.min + Coord::new(0, 2);
+            self.collision_model.max = self.collision_model.max + Coord::new(4, 2);
+        }
+    }
+
+    pub fn straight(&mut self) {
+        self.pose = Pose::STRAIGHT;
+        self.collision_model.min = self.collision_model.min + Coord::new(0, -2);
+        self.collision_model.max = self.collision_model.max + Coord::new(-4, -2);
+    }
+
+    pub fn wham(&mut self) {
+        self.speed = Coord::new(0, 0);
+        self.accel = Coord::new(0, 0);
+        self.eye = Eye::BIG;
     }
 }

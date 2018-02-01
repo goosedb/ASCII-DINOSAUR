@@ -18,7 +18,7 @@ impl Sprite {
     pub fn get_size(&self) -> Coord {
         self.size
     }
-    pub fn set_pixel(&mut self, pix : char, pos : Coord) {
+    pub fn set_pixel(&mut self, pix: char, pos: Coord) {
         self.sprite[(pos.y * self.size.x + pos.x) as usize] = pix;
     }
 }

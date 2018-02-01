@@ -7,8 +7,10 @@ mod renderer;
 mod aabb;
 mod sprite;
 mod dino;
+mod background;
 
 use dino::*;
+use background::*;
 use coord::*;
 use sprite::*;
 use consts::*;
@@ -17,26 +19,21 @@ use std::thread;
 use std::time::{Duration, Instant};
 use pancurses::*;
 
-fn new_frame(win: &mut pancurses::Window) {
-    win.refresh();
-    win.erase();
-}
-
 fn start(win: &mut pancurses::Window) {
     let perfect_tick = Duration::from_millis(50);
 
-    let mut fr = 'c';
+    //====================//
+    let mut alert = String::new();
+    alert += "Please set ";
+    alert += &(WIDTH + 2).to_string();
+    alert += " collumns and ";
+    alert += &(HEIGHT + 2).to_string();
+    alert += " lines\n";
+    let note = "Press space to play";
+    //====================//
+
     loop {
-        //====================//
-        let mut alert = String::new();
-        alert += "Please set ";
-        alert += &(WIDTH + 2).to_string();
-        alert += " collumns and ";
-        alert += &(HEIGHT + 2).to_string();
-        alert += " lines ";
-        alert += &fr.to_string();
-        let note = "\nTo play press 's' ";
-        //====================//
+        win.erase();
 
         win.mv(
             win.get_max_y() / 2,
@@ -53,8 +50,7 @@ fn start(win: &mut pancurses::Window) {
 
         match win.getch() {
             Some(Input::Character(c)) => {
-                fr = c;
-                if c == 's' {
+                if c == ' ' && win.get_max_y() == HEIGHT + 2 && win.get_max_x() == WIDTH + 2 {
                     break;
                 }
             }
@@ -62,7 +58,7 @@ fn start(win: &mut pancurses::Window) {
             None => (),
         }
 
-        new_frame(win);
+        win.refresh();
 
         let after = Instant::now();
         thread::sleep(perfect_tick - after.duration_since(now));
@@ -70,19 +66,18 @@ fn start(win: &mut pancurses::Window) {
 }
 
 fn game(win: &mut pancurses::Window) {
-    //let mut running = true;
-    let perfect_tick = Duration::from_millis(300);
+    let mut running = true;
+    let perfect_tick = Duration::from_millis(PERFECT_TICK);
 
     let mut renderer = Renderer::new();
-    let mut dino = Dino::new();
-    loop {
+
+    while running {
         let now = Instant::now();
-        renderer.put_sprite(&dino.get_sprite(), dino.get_position());
-        renderer.present(win);
-        renderer.clear();
-        dino.step();
-        dino.collision_model.max = dino.collision_model.max + Coord::new(1, 0);
-        dino.collision_model.min = dino.collision_model.min + Coord::new(1, 0);
+
+        //logic();
+        //render();
+        //draw();
+
         let after = Instant::now();
         thread::sleep(perfect_tick - after.duration_since(now));
     }
@@ -96,15 +91,14 @@ fn main() {
     curs_set(0);
     window.nodelay(true);
     window.keypad(true);
-    //let mut go = true;
+    let mut go = true;
 
     start(&mut window);
     window.erase();
-    //loop {
-    game(&mut window);
-    //finish(&mut go);
-    //}
-    thread::sleep(Duration::from_secs(10));
+    while go {
+        game(&mut window);
+        finish(&mut go);
+    }
     endwin();
     window.delwin();
 }
