@@ -89,7 +89,10 @@ fn game(win: &mut pancurses::Window) {
         //draw();
 
         let after = Instant::now();
-        thread::sleep(perfect_tick - after.duration_since(now));
+        let sleep = perfect_tick.as_secs() - after.duration_since(now).as_secs();
+        if sleep > 0 {
+            thread::sleep(perfect_tick - after.duration_since(now));
+        }
     }
 }
 
