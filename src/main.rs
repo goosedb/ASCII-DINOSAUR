@@ -1,23 +1,23 @@
 extern crate pancurses;
 
-mod consts;
+mod aabb;
+mod dino;
 mod coord;
 mod camera;
-mod renderer;
-mod aabb;
 mod sprite;
-mod dino;
+mod consts;
+mod renderer;
 mod background;
 
 use dino::*;
-use background::*;
 use coord::*;
 use sprite::*;
 use consts::*;
 use renderer::*;
 use std::thread;
-use std::time::{Duration, Instant};
 use pancurses::*;
+use background::*;
+use std::time::{Duration, Instant};
 
 fn start(win: &mut pancurses::Window) {
     let perfect_tick = Duration::from_millis(50);
@@ -50,7 +50,9 @@ fn start(win: &mut pancurses::Window) {
 
         match win.getch() {
             Some(Input::Character(c)) => {
-                if c == ' ' && win.get_max_y() == HEIGHT + 2 && win.get_max_x() == WIDTH + 2 {
+                if c == ' '
+                /*&& win.get_max_y() == HEIGHT + 2 && win.get_max_x() == WIDTH + 2*/
+                {
                     break;
                 }
             }
@@ -70,10 +72,18 @@ fn game(win: &mut pancurses::Window) {
     let perfect_tick = Duration::from_millis(PERFECT_TICK);
 
     let mut renderer = Renderer::new();
-
+    let mut background = Background::new();
+    let mut dino = Dino::new();
+    println!("{}", background.clouds.sprite.len());
     while running {
         let now = Instant::now();
-
+        renderer.clear();
+        renderer.put_sprite(&background.get_sprite(), Coord::new(0, 0));
+        renderer.put_sprite(&dino.get_sprite(), Coord::new(3, 12));
+        renderer.present(win);
+        background.move_clouds();
+        background.move_ground();
+        dino.step();
         //logic();
         //render();
         //draw();
@@ -85,12 +95,17 @@ fn game(win: &mut pancurses::Window) {
 
 fn finish(go: &mut bool) {}
 
-fn main() {
-    let mut window = initscr();
+fn setting(win: &mut pancurses::Window) {
     noecho();
     curs_set(0);
-    window.nodelay(true);
-    window.keypad(true);
+    win.nodelay(true);
+    win.keypad(true);
+}
+
+fn main() {
+    let mut window = initscr();
+    setting(&mut window);
+
     let mut go = true;
 
     start(&mut window);

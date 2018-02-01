@@ -1,7 +1,7 @@
 use coord::*;
 
 pub struct Sprite {
-    sprite: Vec<char>,
+    pub sprite: Vec<char>,
     size: Coord,
 }
 
