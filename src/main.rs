@@ -1,4 +1,5 @@
 extern crate pancurses;
+extern crate rand;
 
 mod aabb;
 mod dino;
@@ -8,6 +9,7 @@ mod sprite;
 mod consts;
 mod renderer;
 mod background;
+mod cactus;
 
 use dino::*;
 use coord::*;
@@ -77,13 +79,7 @@ fn game(win: &mut pancurses::Window) {
     println!("{}", background.clouds.sprite.len());
     while running {
         let now = Instant::now();
-        renderer.clear();
-        renderer.put_sprite(&background.get_sprite(), Coord::new(0, 0));
-        renderer.put_sprite(&dino.get_sprite(), Coord::new(3, 12));
-        renderer.present(win);
-        background.move_clouds();
-        background.move_ground();
-        dino.step();
+
         //logic();
         //render();
         //draw();
