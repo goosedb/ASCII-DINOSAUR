@@ -77,8 +77,8 @@ impl Dino {
     pub fn new() -> Dino {
         Dino {
             collision_model: AABB::new(
-                Coord::new(3, HEIGHT - 8 - 3),
-                Coord::new(3 + 13, HEIGHT - 3),
+                Coord::new(3, HEIGHT - 9),
+                Coord::new(3 + 13, HEIGHT - 1),
             ),
             eye: Eye::SMALL,
             legs: Legs::LEFT,

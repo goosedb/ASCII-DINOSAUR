@@ -5,6 +5,7 @@ use rand::Rng;
 use coord::Coord;
 use consts::*;
 use camera::Camera;
+use sprite::Sprite;
 
 #[derive(Clone, Copy)]
 enum Size {
@@ -19,14 +20,14 @@ impl Size {
     }
 }
 
-struct Cactus {
+pub struct Cactus {
     collision_model: AABB,
     size: Size,
 }
 
 impl Cactus {
-    pub fn new(camera : &Camera) -> Cactus {
-        let s = rand::thread_rng().gen_range(0, 2);
+    pub fn new(camera: &Camera) -> Cactus {
+        let s = /*rand::thread_rng().gen_range(0, 2);*/ 1; // for beautyfully test
         let mut aabb: AABB = AABB::new(Coord::new(0, 0), Coord::new(0, 0));
         match Size::new(s) {
             Size::SMALL => {
@@ -44,7 +45,38 @@ impl Cactus {
         }
         Cactus {
             collision_model: aabb,
-            size : Size::new(s),
+            size: Size::new(s),
         }
+    }
+    pub fn get_sprite(&self) -> Sprite {
+        let mut sprite = Sprite::new(vec![], Coord::new(0, 0));
+        match self.size {
+            Size::SMALL => {
+                sprite = Sprite::new(
+                    vec![
+                        ' ', ' ', '#', '#', ' ', ' ', '#', ' ', '#', '#', ' ', '#', ' ', '#', '#',
+                        '#', '#', ' ', ' ', ' ', '#', '#', ' ', ' ', ' ', ' ', '#', '#', ' ', ' ',
+                    ],
+                    Coord::new(6, 5),
+                )
+            }
+            Size::BIG => {
+                sprite = Sprite::new(
+                    vec![
+                        ' ', ' ', ' ', '#', '#', ' ', ' ', ' ', '#', '#', ' ', '#', '#', ' ', ' ',
+                        ' ', '#', '#', ' ', '#', '#', ' ', '#', '#', '#', '#', ' ', '#', '#', '#',
+                        '#', ' ', ' ', '#', '#', '#', '#', ' ', ' ', ' ', ' ', ' ', '#', '#', '#',
+                        ' ', ' ', ' ', ' ', ' ', '#', '#', '#', ' ', ' ', ' ', ' ', ' ', '#', '#',
+                        '#', ' ', ' ', ' ',
+                    ],
+                    Coord::new(8, 8),
+                )
+            }
+        }
+
+        sprite
+    }
+    pub fn get_position(&self) -> Coord {
+        self.collision_model.min
     }
 }
