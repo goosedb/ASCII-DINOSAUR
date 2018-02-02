@@ -1,1 +1,2 @@
-# dino_like_in_chrome
+# Chrome Dinosaur in terminal 
+![Alt text](Dino.jpg)
