@@ -5,3 +5,4 @@ authors = ["goosedb"]
 
 [dependencies]
 pancurses = "0.14.0"
+rand = "0.3.0"
