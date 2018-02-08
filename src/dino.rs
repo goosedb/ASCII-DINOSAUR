@@ -77,14 +77,14 @@ impl Dino {
     pub fn new() -> Dino {
         Dino {
             collision_model: AABB::new(
-                Coord::new(3, HEIGHT - 9),
-                Coord::new(3 + 13, HEIGHT - 1),
+                Coord_f::new(3.0, (HEIGHT - 9) as f32),
+                Coord_f::new(3.0 + 13.0, GROUND as f32),
             ),
             eye: Eye::SMALL,
             legs: Legs::LEFT,
             pose: Pose::STRAIGHT,
             speed: Coord::new(1, 0),
-            accel: Coord::new(0, -1),
+            accel: Coord::new(0, 0),
         }
     }
 
@@ -112,7 +112,7 @@ impl Dino {
                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                     ],
-                    self.collision_model.max - self.collision_model.min,
+                    Coord::new(13, 8),
                 );
                 match self.legs {
                     Legs::LEFT => {
@@ -147,18 +147,18 @@ impl Dino {
                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                         ' ', ' ', ' ',
                     ],
-                    self.collision_model.max - self.collision_model.min,
+                    Coord::new(18, 6),
                 );
                 match self.legs {
                     Legs::LEFT => {
-                        sprite.set_pixel('I', Coord::new(4, 4));
-                        sprite.set_pixel('L', Coord::new(4, 5));
-                        sprite.set_pixel('L', Coord::new(6, 4));
+                        sprite.set_pixel('@', Coord::new(4, 4));
+                        sprite.set_pixel('@', Coord::new(4, 5));
+                        sprite.set_pixel('@', Coord::new(6, 4));
                     }
                     Legs::RIGHT => {
-                        sprite.set_pixel('I', Coord::new(6, 4));
-                        sprite.set_pixel('L', Coord::new(6, 5));
-                        sprite.set_pixel('L', Coord::new(4, 4));
+                        sprite.set_pixel('@', Coord::new(6, 4));
+                        sprite.set_pixel('@', Coord::new(6, 5));
+                        sprite.set_pixel('@', Coord::new(4, 4));
                     }
                 }
 
@@ -172,21 +172,34 @@ impl Dino {
     }
 
     pub fn get_position(&self) -> Coord {
-        self.collision_model.min
+        Coord::from_coord_f(self.collision_model.min)
     }
 
     pub fn crouch(&mut self) {
-        if self.speed.y == 0 {
+        if self.pose != Pose::CROUCH {
             self.pose = Pose::CROUCH;
-            self.collision_model.min = self.collision_model.min + Coord::new(0, 2);
-            self.collision_model.max = self.collision_model.max + Coord::new(4, 2);
+            self.collision_model.min = self.collision_model.min + Coord_f::new(0.0, 2.0);
+            self.collision_model.max = self.collision_model.max + Coord_f::new(4.0, 2.0);
         }
     }
 
     pub fn straight(&mut self) {
-        self.pose = Pose::STRAIGHT;
-        self.collision_model.min = self.collision_model.min + Coord::new(0, -2);
-        self.collision_model.max = self.collision_model.max + Coord::new(-4, -2);
+        if self.pose != Pose::STRAIGHT {
+            self.pose = Pose::STRAIGHT;
+            self.collision_model.min = self.collision_model.min + Coord_f::new(0.0, -2.0);
+            self.collision_model.max = self.collision_model.max + Coord_f::new(-4.0, -2.0);
+        }
+    }
+
+    pub fn up(&mut self) {}
+
+    pub fn down(&mut self) {}
+
+    pub fn frame(&mut self) {
+        let move_x = self.speed.x as f32 / PERFECT_TICK as f32;
+        let move_y = self.speed.y as f32 / PERFECT_TICK as f32;
+        self.collision_model.min = self.collision_model.min + Coord_f::new(move_x, move_y);
+        self.collision_model.max = self.collision_model.max + Coord_f::new(move_x, move_y);
     }
 
     pub fn wham(&mut self) {

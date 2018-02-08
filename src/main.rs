@@ -72,36 +72,27 @@ fn start(win: &mut pancurses::Window) {
 
 fn game(win: &mut pancurses::Window) {
     let mut running = true;
-    let perfect_tick = Duration::from_millis(PERFECT_TICK);
 
     let mut renderer = Renderer::new();
     let mut background = Background::new();
     let mut dino = Dino::new();
     let cactus = Cactus::new(&renderer.camera);
-    println!("{}", background.clouds.sprite.len());
+
+    let mut now = Instant::now();
+    let mut after = Instant::now();
     while running {
-        let now = Instant::now();
         renderer.clear();
-        let campose_x = renderer.camera.get_border().min.x;
-        renderer.put_sprite(&background.get_sprite(), Coord::new(campose_x, 0));
-        renderer.put_sprite(&cactus.get_sprite(), cactus.get_position());
+        renderer.put_sprite(&background.get_sprite(), Coord::new(0, 0));
         renderer.put_sprite(&dino.get_sprite(), dino.get_position());
         renderer.present(win);
-        renderer.camera.move_it(Coord::new(1, 0));
-        background.move_ground();
-        background.move_clouds();
-        dino.step();
-        dino.collision_model.min = dino.collision_model.min + Coord::new(1, 0);
-        dino.collision_model.max = dino.collision_model.max + Coord::new(1, 0);
-        //logic();
-        //render();
-        //draw();
+        win.mv(22, 10);
+        let mut alert = String::new();
+        alert += &dino.collision_model.max.x.to_string();
+        win.printw(&alert);
+        win.refresh();
+        dino.frame();
 
-        let after = Instant::now();
-        let sleep = perfect_tick.subsec_nanos() - after.duration_since(now).subsec_nanos();
-        if sleep > 0 {
-            thread::sleep(perfect_tick - after.duration_since(now));
-        }
+        sleep(&mut now, &mut after);
     }
 }
 
@@ -112,6 +103,15 @@ fn setting(win: &mut pancurses::Window) {
     curs_set(0);
     win.nodelay(true);
     win.keypad(true);
+}
+
+fn sleep(now: &mut Instant, after: &mut Instant) {
+    let sleep = (PERFECT_TICK_DUR.subsec_nanos() / 10000000) as i64
+        - (after.duration_since(*now).subsec_nanos() / 10000000) as i64;
+    if sleep > 0 {
+        thread::sleep(PERFECT_TICK_DUR - after.duration_since(*now));
+    }
+   *now = *after;
 }
 
 fn main() {

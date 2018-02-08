@@ -13,7 +13,7 @@ impl Renderer {
     pub fn new() -> Renderer {
         Renderer {
             render: vec![' '; (WIDTH * HEIGHT) as usize],
-            camera: Camera::new(Coord::new(WIDTH, HEIGHT), Coord::new(0, 0)),
+            camera: Camera::new(Coord::new(WIDTH, HEIGHT), Coord_f::new(0.0, 0.0)),
         }
     }
 
@@ -28,7 +28,7 @@ impl Renderer {
             if sprite.get_pixel(i) == ' ' {
                 continue;
             }
-            let coords_origin = position - self.camera.get_border().min;
+            let coords_origin = position - Coord::from_coord_f(self.camera.get_border().min);
 
             let relative_coord = Coord::new(
                 i % sprite.get_size().x,
