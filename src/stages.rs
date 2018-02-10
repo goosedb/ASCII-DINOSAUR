@@ -59,22 +59,69 @@ pub fn game(win: &mut Window) {
     let mut renderer = Renderer::new();
     let mut background = Background::new();
     let mut dino = Dino::new();
-    let cactuses = vec![Cactus::new(&renderer.camera)];
+    let mut cactuses = vec![Cactus::new(&renderer.camera)];
 
     let mut now = Instant::now();
     let mut after = Instant::now();
 
     let mut score = 0;
+    let mut time_to_step = 0;
     while running {
-        input();
-        logic();
+        logic(
+            win,
+            &mut renderer,
+            &mut dino,
+            &mut cactuses,
+            &mut background,
+            &mut running,
+            &mut score,
+            &mut time_to_step,
+        );
         render(&mut renderer, &dino, &cactuses, &background);
         draw(win, &renderer, score);
         sleep(&mut now, &mut after);
     }
 }
 
-pub fn finish(go: &mut bool) {}
+pub fn finish(win: &mut Window, go: &mut bool) {
+    let gameover = vec![
+        "                                                            ",
+        " GGGGGG AAAAAA M    M EEEEEE   OOOOOO V     V EEEEEE RRRRRR ",
+        " G      A    A MM  MM EEEE     O    O  V   V  EEEE   R    R ",
+        " G   GG AAAAAA M MM M E        O    O   V V   E      RRRRRR ",
+        " GGGGGG A    A M    M EEEEEE   OOOOOO    V    EEEEEE R    R ",
+        "                                                            ",
+    ];
+    for i in 0..gameover.len() {
+        win.mv(
+            HEIGHT / 2 - 3 + i as i32,
+            (WIDTH + 2) / 2 - gameover[i].len() as i32 / 2,
+        );
+        win.printw(gameover[i]);
+    }
+
+    let note = "Press \"p\" to try again and \"q\" to exit.".to_string();
+    win.mv(HEIGHT - 7, (WIDTH + 2) / 2 - note.len() as i32 / 2);
+    win.printw(&note);
+
+    win.refresh();
+
+    loop {
+        match win.getch() {
+            Some(Input::Character(c)) => {
+                if c == 'p' {
+                    break;
+                }
+                if c == 'q' {
+                    *go = false;
+                    break;
+                }
+            }
+            Some(input) => {}
+            None => (),
+        }
+    }
+}
 
 fn print_string(win: &mut Window, string: &String, line: i32) {
     win.mv(

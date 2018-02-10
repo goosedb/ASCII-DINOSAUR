@@ -1,12 +1,13 @@
 use sprite::*;
 use coord::*;
+use consts::*;
 use consts::{HEIGHT, WIDTH};
 
 pub struct Background {
     ground: Sprite,
     pub clouds: Sprite,
-    gr_position: i32,
-    cl_position: i32,
+    gr_position: f32,
+    cl_position: f32,
 }
 
 impl Background {
@@ -52,15 +53,21 @@ impl Background {
                 ],
                 Coord::new(81, 5),
             ),
-            gr_position: 0,
-            cl_position: 0,
+            gr_position: 0.0,
+            cl_position: 0.0,
         }
     }
-    pub fn move_clouds(&mut self) {
-        self.cl_position = (self.cl_position + 1) % self.clouds.get_size().x;
-    }
-    pub fn move_ground(&mut self) {
-        self.gr_position = (self.gr_position + 1) % self.ground.get_size().x;
+    pub fn move_it(&mut self, speed: i32) {
+        self.cl_position += speed as f32 / FPS as f32 / 100.0;
+        if self.cl_position > self.clouds.get_size().x as f32 {
+            self.cl_position -= self.clouds.get_size().x as f32;
+        }
+        self.gr_position += speed as f32 / FPS as f32;
+        if self.gr_position > self.ground.get_size().x as f32 {
+            self.gr_position -= self.ground.get_size().x as f32;
+        }
+        self.cl_position %= self.clouds.get_size().x as f32;
+        self.gr_position %= self.ground.get_size().x as f32;
     }
     pub fn get_sprite(&self) -> Sprite {
         let mut sprite = Sprite::new(
@@ -72,7 +79,7 @@ impl Background {
                 sprite.set_pixel(
                     self.clouds.get_pixel(
                         i * self.clouds.get_size().x
-                            + (self.cl_position + j) % self.clouds.get_size().x,
+                            + (self.cl_position as i32 + j) % self.clouds.get_size().x,
                     ),
                     Coord::new(j, i),
                 );
@@ -83,7 +90,7 @@ impl Background {
                 sprite.set_pixel(
                     self.ground.get_pixel(
                         i * self.ground.get_size().x
-                            + (self.gr_position + j) % self.ground.get_size().x,
+                            + (self.gr_position as i32 + j) % self.ground.get_size().x,
                     ),
                     Coord::new(j, HEIGHT - self.ground.get_size().y + i),
                 );

@@ -1,5 +1,6 @@
 use coord::*;
 
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AABB {
     pub min: Coord_f,
     pub max: Coord_f,

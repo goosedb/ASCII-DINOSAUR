@@ -69,7 +69,7 @@ pub struct Dino {
     eye: Eye,
     legs: Legs,
     pose: Pose,
-    speed: Coord,
+    pub speed: Coord,
     accel: Coord,
 }
 
@@ -83,7 +83,7 @@ impl Dino {
             eye: Eye::SMALL,
             legs: Legs::LEFT,
             pose: Pose::STRAIGHT,
-            speed: Coord::new(1, 0),
+            speed: Coord::new(10, 0),
             accel: Coord::new(0, 0),
         }
     }
@@ -191,13 +191,29 @@ impl Dino {
         }
     }
 
-    pub fn up(&mut self) {}
+    pub fn up(&mut self) {
+        if self.speed.y == 0 {
+            self.speed.y = 8;
+        }
+        if self.speed.y > 0 {}
+    }
 
-    pub fn down(&mut self) {}
+    pub fn down(&mut self) {
+        if self.collision_model.max.y as i32 == GROUND {
+            self.crouch();
+        } else {
+            self.accel.y *= 2;
+        }
+    }
 
     pub fn frame(&mut self) {
-        let move_x = self.speed.x as f32 / PERFECT_TICK as f32;
-        let move_y = self.speed.y as f32 / PERFECT_TICK as f32;
+        let move_x = self.speed.x as f32 / FPS as f32;
+        let mut move_y = self.speed.y as f32 / FPS as f32;
+        self.speed.y += self.accel.y;
+        if self.collision_model.max.y as i32 >= GROUND {
+            move_y = 0.0;
+            self.speed.y = 0;
+        }
         self.collision_model.min = self.collision_model.min + Coord_f::new(move_x, move_y);
         self.collision_model.max = self.collision_model.max + Coord_f::new(move_x, move_y);
     }

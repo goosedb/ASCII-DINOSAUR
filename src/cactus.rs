@@ -21,7 +21,7 @@ impl Size {
 }
 
 pub struct Cactus {
-    collision_model: AABB,
+    pub collision_model: AABB,
     size: Size,
 }
 

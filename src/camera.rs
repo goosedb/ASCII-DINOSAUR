@@ -1,3 +1,4 @@
+use consts::*;
 use coord::*;
 use aabb::*;
 
@@ -13,8 +14,8 @@ impl Camera {
             position: position,
         }
     }
-    pub fn move_it(&mut self, step: Coord_f) {
-        self.position = self.position + step;
+    pub fn move_it(&mut self, speed: i32) {
+        self.position = self.position + Coord_f::new(speed as f32 / FPS as f32, 0_f32);
     }
     pub fn get_border(&self) -> AABB {
         AABB::new(

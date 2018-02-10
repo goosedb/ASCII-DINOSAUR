@@ -1,4 +1,3 @@
-
 extern crate pancurses;
 extern crate rand;
 
@@ -15,6 +14,8 @@ mod stages;
 mod gameloop;
 
 use stages::*;
+use std::thread;
+use std::time::Duration;
 
 fn setting(win: &mut pancurses::Window) {
     pancurses::noecho();
@@ -27,12 +28,13 @@ fn main() {
     let mut window = pancurses::initscr();
     setting(&mut window);
 
-    let mut go = false;
+    let mut go = true;
 
     start(&mut window);
     while go {
         game(&mut window);
-        finish(&mut go);
+        thread::sleep(Duration::from_secs(1));
+        finish(&mut window, &mut go);
     }
 
     pancurses::endwin();
