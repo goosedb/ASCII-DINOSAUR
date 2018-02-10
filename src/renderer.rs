@@ -44,7 +44,6 @@ impl Renderer {
     }
 
     pub fn present(&self, win: &pancurses::Window) {
-        win.erase();
         for h in 0..HEIGHT {
             for w in 0..WIDTH {
                 win.mv(h + 1, w + 1);
@@ -53,6 +52,5 @@ impl Renderer {
                 win.printw(&s);
             }
         }
-        win.refresh();
     }
 }
