@@ -120,6 +120,7 @@ pub fn finish(win: &mut Window, go: &mut bool) {
             Some(input) => {}
             None => (),
         }
+        thread::sleep(Duration::from_millis(50));
     }
 }
 

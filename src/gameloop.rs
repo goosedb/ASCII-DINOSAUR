@@ -42,14 +42,21 @@ pub fn logic(
     match input(win) {
         Event::UP => {
             dino.up();
+            win.mv(23, 0);
+            win.printw("up");
         }
         Event::DOWN => {
             dino.down();
+            win.mv(23, 0);
+            win.printw("down");
         }
         Event::NONE => {
             dino.straight();
+            win.mv(23, 0);
+            win.printw("NO!!!!!");
         }
     }
+    win.refresh();
     //MOVEING
     *time_to_step = (*time_to_step + 1) % 10;
     if *time_to_step == 0 {
