@@ -1,8 +1,8 @@
 [package]
-name = "dino_like_in_chrome"
+name = "dinosaur"
 version = "0.1.0"
 authors = ["goosedb"]
 
 [dependencies]
-pancurses = "0.14.0"
-rand = "0.3.0"
+rand = "0.4"
+tcod = "0.12.1"
