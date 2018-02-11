@@ -2,7 +2,7 @@ use camera::Camera;
 use consts::{HEIGHT, WIDTH};
 
 pub struct Render {
-    camera: Camera,
+    pub camera: Camera,
     render: Vec<char>,
 }
 

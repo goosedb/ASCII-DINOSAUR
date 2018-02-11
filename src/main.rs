@@ -7,6 +7,7 @@ mod cactus;
 mod camera;
 mod consts;
 mod render;
+mod dinosaur;
 mod mainloop;
 mod gameloop;
 mod gamestate;

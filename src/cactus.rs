@@ -26,6 +26,7 @@ impl CactusSize {
 pub struct Cactus {
     aabb: AABB,
     size: CactusSize,
+    pub is_in_scope: bool,
 }
 
 impl Cactus {
@@ -61,6 +62,10 @@ impl Cactus {
                 Coord::new((sp + cx) as f64, GROUND as f64),
             ),
             size: size,
+            is_in_scope: true,
         }
+    }
+    pub fn get_max(&mut self) -> Coord {
+        self.aabb.max
     }
 }

@@ -20,4 +20,15 @@ impl GameState {
             background: Background::new(),
         }
     }
+    pub fn clean_cactuses(&mut self) {
+        for i in self.cactuses {
+            for j in i {
+                if j.get_max().x < self.render.camera.get_min().x {
+                   j.is_in_scope = false;
+                }
+            }
+            i.retain(|&x| x.is_in_scope);
+        }
+        self.cactuses.retain(|&x| x.len() != 0);
+    }
 }
