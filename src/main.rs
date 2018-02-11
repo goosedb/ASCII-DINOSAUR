@@ -4,13 +4,15 @@ extern crate tcod;
 mod aabb;
 mod coord;
 mod cactus;
+mod camera;
 mod consts;
+mod render;
 mod mainloop;
 mod gameloop;
 mod gamestate;
 
-use consts::{HEIGHT, TITLE, WIDTH};
 use tcod::RootConsole;
+use consts::{HEIGHT, TITLE, WIDTH};
 use mainloop::{finish, game, start};
 
 fn main() {

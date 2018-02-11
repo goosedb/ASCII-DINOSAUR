@@ -29,10 +29,10 @@ pub struct Cactus {
 }
 
 impl Cactus {
-    pub fn new_group(position : i32) -> Vec<Cactus> {
+    pub fn new_group(position: i32) -> Vec<Cactus> {
         let mut distance = 0;
         let mut cactuses: Vec<Cactus> = Vec::new();
-        
+
         // 25% -- one cactus, 50% -- two cactus, 25% three cactus.
         let probability = [1, 2, 2, 3];
 

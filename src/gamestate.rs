@@ -1,5 +1,6 @@
 use consts::WIDTH;
 use cactus::Cactus;
+use render::Render;
 
 pub struct GameState {
     pub score: i32,

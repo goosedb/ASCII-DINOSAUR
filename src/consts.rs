@@ -9,7 +9,7 @@ pub const CACTUS_BIG_SIZE_Y: i32 = 4;
 pub const CACTUS_LIT_SIZE_X: i32 = 4;
 pub const CACTUS_LIT_SIZE_Y: i32 = 4;
 
-pub const DINOSAUR_CROUCH_SIZE_X : i32 = 4;
-pub const DINOSAUR_CROUCH_SIZE_Y : i32 = 4;
-pub const DINOSAUR_STRIGHT_SIZE_X : i32 = 4;
-pub const DINOSAUR_STRIGHT_SIZE_Y : i32 = 4;
+pub const DINOSAUR_CROUCH_SIZE_X: i32 = 4;
+pub const DINOSAUR_CROUCH_SIZE_Y: i32 = 4;
+pub const DINOSAUR_STRIGHT_SIZE_X: i32 = 4;
+pub const DINOSAUR_STRIGHT_SIZE_Y: i32 = 4;
