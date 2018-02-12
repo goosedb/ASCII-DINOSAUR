@@ -25,8 +25,9 @@ fn main() {
     show_cursor(false);
 
     while mainloop {
-        start(&mut console, &mut mainloop);
-        game(&mut console, &mut mainloop);
+        start(&mut console);
+        game(&mut console);
         finish(&mut console, &mut mainloop);
     }
+
 }

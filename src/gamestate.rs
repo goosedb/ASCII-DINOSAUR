@@ -8,6 +8,7 @@ use std::time::{Duration, Instant};
 pub struct GameState {
     pub score: i32,
     pub frame: i32,
+    pub gameloop: bool,
     pub now: Instant,
     pub after: Instant,
     pub render: Render,
@@ -21,6 +22,7 @@ impl GameState {
         GameState {
             score: 0,
             frame: 0,
+            gameloop: true,
             now: Instant::now(),
             after: Instant::now(),
             render: Render::new(),

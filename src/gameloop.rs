@@ -7,7 +7,7 @@ use gamestate::GameState;
 use tcod::input::{Key, KEY_PRESSED, KeyCode};
 use tcod::input::KeyCode::{Up, Down, Left, Right, Escape};
 
-pub fn logic(console: &mut Root, gamestate: &mut GameState, mainloop : &mut bool) {
+pub fn logic(console: &mut Root, gamestate: &mut GameState) {
     sleep(gamestate);
     let keypress = console.check_for_keypress(KEY_PRESSED);
     match keypress {
@@ -15,7 +15,7 @@ pub fn logic(console: &mut Root, gamestate: &mut GameState, mainloop : &mut bool
             let button = keypress.code;
             if button == KeyCode::Up {
                 println!("up!");
-                *mainloop = false;
+                gamestate.gameloop = false;
             }
             if button == KeyCode::Down {
                 println!("down!");
