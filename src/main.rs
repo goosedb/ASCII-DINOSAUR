@@ -11,6 +11,7 @@ mod dinosaur;
 mod mainloop;
 mod gameloop;
 mod gamestate;
+mod background;
 
 use tcod::RootConsole;
 use consts::{HEIGHT, TITLE, WIDTH};
