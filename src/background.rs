@@ -13,7 +13,7 @@ impl Background {
             ground_position: 0.0,
         }
     }
-    pub fn move_it(&mut self, speed : Coord) {
+    pub fn move_it(&mut self, speed: Coord) {
         self.clouds_position += speed.x / 50.0 / FRAMES_PER_SECOND as f64;
         self.ground_position += speed.x / FRAMES_PER_SECOND as f64;
     }

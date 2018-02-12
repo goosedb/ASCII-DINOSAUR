@@ -3,10 +3,13 @@ use cactus::Cactus;
 use render::Render;
 use dinosaur::Dinosaur;
 use background::Background;
+use std::time::{Duration, Instant};
 
 pub struct GameState {
     pub score: i32,
     pub frame: i32,
+    pub now: Instant,
+    pub after: Instant,
     pub render: Render,
     pub dinosaur: Dinosaur,
     pub cactuses: Vec<Vec<Cactus>>,
@@ -18,6 +21,8 @@ impl GameState {
         GameState {
             score: 0,
             frame: 0,
+            now: Instant::now(),
+            after: Instant::now(),
             render: Render::new(),
             dinosaur: Dinosaur::new(),
             cactuses: vec![Cactus::new_group(WIDTH)],

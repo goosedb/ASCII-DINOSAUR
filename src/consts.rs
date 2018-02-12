@@ -2,7 +2,7 @@ pub const WIDTH: i32 = 100;
 pub const HEIGHT: i32 = 20;
 pub const TITLE: &str = "Dinosaur"; //final
 
-pub const FRAMES_PER_SECOND: i32 = 50; //final
+pub const FRAMES_PER_SECOND: i32 = 20; //final
 pub const MILLIS_IN_CESOND: i32 = 1000; //final
 
 pub const GROUND: i32 = HEIGHT - 1; //final
