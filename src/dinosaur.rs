@@ -1,5 +1,6 @@
 use aabb::AABB;
 use coord::Coord;
+use sprite::Sprite;
 use consts::{ACCEL_OF_FREE_FALLING, DINOSAUR_CROUCH_SIZE_X, DINOSAUR_CROUCH_SIZE_Y,
              DINOSAUR_DEF_ACCEL_X, DINOSAUR_DEF_ACCEL_Y, DINOSAUR_DEF_SPEED_X,
              DINOSAUR_DEF_SPEED_Y, DINOSAUR_STRAIGHT_SIZE_X, DINOSAUR_STRAIGHT_SIZE_Y,
@@ -7,7 +8,7 @@ use consts::{ACCEL_OF_FREE_FALLING, DINOSAUR_CROUCH_SIZE_X, DINOSAUR_CROUCH_SIZE
              SPEED_OF_JUMP};
 
 #[derive(PartialEq)]
-enum Body {
+pub enum Body {
     STRAIGHT,
     CROUCH,
 }
@@ -39,7 +40,7 @@ impl Legs {
 pub struct Dinosaur {
     aabb: AABB,
     eye: Eye,
-    body: Body,
+    pub body: Body,
     legs: Legs,
     speed: Coord,
     accel: Coord,
@@ -53,7 +54,7 @@ impl Dinosaur {
                 Coord::new(3.0 + DINOSAUR_STRAIGHT_SIZE_X as f64, GROUND as f64),
             ),
             eye: Eye::SMALL,
-            body: Body::STRAIGHT,
+            body: Body::CROUCH,
             legs: Legs::LEFT,
             speed: Coord::new(DINOSAUR_DEF_SPEED_X, DINOSAUR_DEF_SPEED_X),
             accel: Coord::new(DINOSAUR_DEF_ACCEL_X, DINOSAUR_DEF_ACCEL_Y),
@@ -106,7 +107,7 @@ impl Dinosaur {
         self.aabb.min = self.aabb.min + Coord::new(move_x, move_y);
         self.aabb.max = self.aabb.max + Coord::new(move_x, move_y);
     }
-    pub fn straignt(&mut self) {
+    pub fn straight(&mut self) {
         self.body = Body::STRAIGHT;
         self.aabb.min.y -= DINOSAUR_STRAIGHT_SIZE_Y as f64 - DINOSAUR_CROUCH_SIZE_Y as f64;
         self.aabb.max.x -= DINOSAUR_CROUCH_SIZE_X as f64 - DINOSAUR_STRAIGHT_SIZE_X as f64;
@@ -118,7 +119,7 @@ impl Dinosaur {
     }
     pub fn up(&mut self) {
         if self.body == Body::CROUCH {
-            self.straignt();
+            self.straight();
             self.speed.y += SPEED_OF_JUMP;
         }
         // double jump
@@ -127,10 +128,62 @@ impl Dinosaur {
         }
     }
     pub fn down(&mut self) {
-        if self.aabb.max.y == GROUND as f64 {
+        if self.aabb.max.y == GROUND as f64 && self.body != Body::CROUCH{
             self.crouch();
         } else {
             self.accel.y *= 2.0;
         }
+    }
+    pub fn get_sprite(&self) -> Sprite {
+        let mut sprite: Vec<char>;
+        let mut size: Coord;
+        match self.body {
+            Body::STRAIGHT => {
+                sprite = vec![
+                    ' ', ' ', ' ', ' ', ' ', ' ', '@', 'O', '@', '@', '@',
+                    ' ', ' ', ' ', ' ', ' ', ' ', '@', '@', '@', '@', '@',
+                    '@', ' ', ' ', ' ', ' ', '@', '@', '@', '@', ' ', ' ',
+                    '@', '@', ' ', ' ', '@', '@', '@', '@', '@', '~', '~',
+                    ' ', '@', '@', '@', '@', '@', '@', '@', ' ', ' ', ' ',
+                    ' ', ' ', '@', '@', '@', '@', '@', ' ', ' ', ' ',' ',
+                    ' ', ' ', ' ', 'I', ' ', 'L', ' ', ' ', ' ', ' ',' ',
+                    ' ', ' ', ' ', 'L', ' ', ' ', ' ', ' ', ' ', ' ',' ',
+                ];
+                size = Coord::new(
+                    DINOSAUR_STRAIGHT_SIZE_X as f64,
+                    DINOSAUR_STRAIGHT_SIZE_Y as f64,
+                );
+                /*
+                               @o@@@@
+                               @@@@@@
+                        @    @@@@@@  
+                        @@  @@@@@@@~~
+                         @@@@@@@@@   
+                          @@@@@@     
+                           @  @@     
+                           @@         
+                */
+            }
+            Body::CROUCH => {
+                sprite = vec![
+                    '@', ' ', ' ', ' ', ' ', '@', '@', '@', '@', ' ', '@', 'O', '@', '@', '@', 
+                    '@', '@', ' ', ' ', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@',
+                    ' ', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', ' ', ' ', ' ',
+                    ' ', ' ', ' ', '@', '@', '@', '@', '@', ' ', 'S', ' ', ' ', ' ', ' ', ' ',
+                    ' ', ' ', ' ', ' ', 'I', ' ', 'L', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                    ' ', ' ', ' ', ' ', 'L', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                ];
+                size = Coord::new(DINOSAUR_CROUCH_SIZE_X as f64, DINOSAUR_CROUCH_SIZE_Y as f64);
+                /*
+                    @    @@@@@@ @o@@@@
+                    @@  @@@@@@@ @@@@@@
+                     @@@@@@@@@@@@@
+                       @@@@@@  S
+                       @  @@
+                       @@
+                */
+            }
+        }
+        Sprite::new(sprite, size)
     }
 }
