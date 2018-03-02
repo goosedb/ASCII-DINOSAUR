@@ -51,7 +51,7 @@ fn input(console: &mut Root, dinosaur: &mut Dinosaur) {
         } else {
             match e.code {
                 KeyCode::Down => {
-                    //dinosaur.straight();
+                    dinosaur.straight();
                 }
                 _ => {}
             }

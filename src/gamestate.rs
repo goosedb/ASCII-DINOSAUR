@@ -58,7 +58,7 @@ impl GameState {
         let move_x = speed.x / FRAMES_PER_SECOND as f64;
         let move_y = speed.y / FRAMES_PER_SECOND as f64;
         self.dinosaur.move_it(move_x, move_y);
-        self.background.move_it(move_x, move_y);
-        self.render.camera.move_it(move_x, move_y);
+        self.background.move_it(move_x);
+        self.render.camera.move_it(move_x);
     }
 }

@@ -10,8 +10,8 @@ impl Background {
             ground_position: 0.0,
         }
     }
-    pub fn move_it(&mut self, move_x: f64, move_y: f64) {
+    pub fn move_it(&mut self, move_x: f64) {
         self.clouds_position += move_x / 50.0 as f64;
-        self.ground_position += move_y;
+        self.ground_position += move_x;
     }
 }
