@@ -1,36 +1,28 @@
 use std::thread;
 use std::time::{Duration, Instant};
-use tcod::console::Root;
 use tcod::Console;
-use dinosaur::Body;
+use tcod::console::Root;
+use dinosaur::Dinosaur;
 use consts::{FRAMES_PER_SECOND, MILLIS_IN_CESOND};
 use gamestate::GameState;
-use tcod::input::{Key, KeyCode, KEY_PRESSED};
-use tcod::input::KeyCode::{Down, Escape, Left, Right, Up};
+use tcod::input::{KeyCode, KEY_PRESSED, KEY_RELEASED};
 
 pub fn logic(console: &mut Root, gamestate: &mut GameState) {
     sleep(gamestate);
-    let keypress = console.check_for_keypress(KEY_PRESSED);
-    let mut b = false;
-    match keypress {
-        Some(keypress) => {
-            let button = keypress.code;
-            if button == KeyCode::Up {
-                gamestate.dinosaur.up();
-            }
-            if button == KeyCode::Down {
-                gamestate.dinosaur.down();
-            }
-        }
-        None => {
-            if gamestate.dinosaur.body == Body::CROUCH { println!("NONE!");}
-            gamestate.dinosaur.up();
-        }
+    input(console, &mut gamestate.dinosaur);
+    gamestate.move_it();
+    gamestate.clean_cactuses();
+    if gamestate.frame % 10 == 0 {
+        gamestate.dinosaur.step();
     }
+    gamestate.frame = (gamestate.frame + 1) % FRAMES_PER_SECOND;
 }
 pub fn render(console: &mut Root, gamestate: &mut GameState) {
     gamestate.render.clear();
-    gamestate.render.put_sprite(&gamestate.dinosaur.get_sprite(), gamestate.dinosaur.get_position());
+    gamestate.render.put_sprite(
+        &gamestate.dinosaur.get_sprite(),
+        gamestate.dinosaur.get_position(),
+    );
 }
 pub fn draw(console: &mut Root, gamestate: &mut GameState) {
     console.clear();
@@ -46,4 +38,23 @@ fn sleep(gamestate: &mut GameState) {
         thread::sleep(Duration::from_millis(sleep as u64));
     }
     gamestate.now = Instant::now();
+}
+
+fn input(console: &mut Root, dinosaur: &mut Dinosaur) {
+    while let Some(e) = console.check_for_keypress(KEY_PRESSED | KEY_RELEASED) {
+        if e.pressed {
+            match e.code {
+                KeyCode::Up => dinosaur.up(),
+                KeyCode::Down => dinosaur.down(),
+                _ => {}
+            }
+        } else {
+            match e.code {
+                KeyCode::Down => {
+                    //dinosaur.straight();
+                }
+                _ => {}
+            }
+        }
+    }
 }

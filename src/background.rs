@@ -1,6 +1,3 @@
-use coord::Coord;
-use consts::FRAMES_PER_SECOND;
-
 pub struct Background {
     clouds_position: f64,
     ground_position: f64,
@@ -13,8 +10,8 @@ impl Background {
             ground_position: 0.0,
         }
     }
-    pub fn move_it(&mut self, speed: Coord) {
-        self.clouds_position += speed.x / 50.0 / FRAMES_PER_SECOND as f64;
-        self.ground_position += speed.x / FRAMES_PER_SECOND as f64;
+    pub fn move_it(&mut self, move_x: f64, move_y: f64) {
+        self.clouds_position += move_x / 50.0 as f64;
+        self.ground_position += move_y;
     }
 }

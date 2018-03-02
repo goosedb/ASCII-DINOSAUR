@@ -1,6 +1,6 @@
 use aabb::AABB;
 use coord::Coord;
-use consts::{HEIGHT, WIDTH};
+use consts::{FRAMES_PER_SECOND, HEIGHT, WIDTH};
 
 pub struct Camera {
     border: AABB,
@@ -15,9 +15,9 @@ impl Camera {
             ),
         }
     }
-    pub fn move_it(&mut self, step: Coord) {
-        self.border.min = self.border.min + step;
-        self.border.max = self.border.max + step;
+    pub fn move_it(&mut self, move_x: f64, move_y: f64) {
+        self.border.min.x += move_x;
+        self.border.max.x += move_y;
     }
     pub fn get_min(&self) -> Coord {
         self.border.min

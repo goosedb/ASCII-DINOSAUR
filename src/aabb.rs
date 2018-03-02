@@ -1,5 +1,6 @@
 use coord::Coord;
 
+#[derive(Clone, Copy)]
 pub struct AABB {
     pub min: Coord,
     pub max: Coord,

@@ -21,7 +21,6 @@ use mainloop::{finish, game, start};
 fn main() {
     let mut mainloop = true;
     let mut console = Root::initializer().size(WIDTH, HEIGHT).title(TITLE).init();
-
     while mainloop {
         start(&mut console);
         game(&mut console);

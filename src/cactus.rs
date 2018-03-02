@@ -3,7 +3,8 @@ use rand::Rng;
 use aabb::AABB;
 use coord::Coord;
 use sprite::Sprite;
-use consts::{CACTUS_BIG_SIZE_X, CACTUS_BIG_SIZE_Y, CACTUS_SMALL_SIZE_X, CACTUS_SMALL_SIZE_Y, GROUND};
+use consts::{CACTUS_BIG_SIZE_X, CACTUS_BIG_SIZE_Y, CACTUS_SMALL_SIZE_X, CACTUS_SMALL_SIZE_Y,
+             GROUND};
 
 #[derive(Clone, Copy)]
 pub enum CactusSize {
@@ -16,14 +17,15 @@ impl CactusSize {
         let types = [CactusSize::SMALL, CactusSize::BIG];
         types[t as usize]
     }
-    pub fn to_int(t: CactusSize) -> i32 {
+    /*pub fn to_int(t: CactusSize) -> i32 {
         match t {
             CactusSize::SMALL => 0,
             CactusSize::BIG => 1,
         }
-    }
+    }*/
 }
 
+#[warn(dead_code)]
 pub struct Cactus {
     aabb: AABB,
     size: CactusSize,
@@ -37,13 +39,18 @@ impl Cactus {
         // 25% -- one cactus, 50% -- two cactus, 25% three cactus.
         let probability = [1, 2, 2, 3];
 
-        for i in 0..probability[rand::thread_rng().gen_range(0, 4) as usize] {
+        for _ in 0..probability[rand::thread_rng().gen_range(0, 4) as usize] {
             let mut cactus: Cactus;
             let size = CactusSize::from_int(rand::thread_rng().gen_range(0, 2));
             let start_point_x = position + distance;
             match size {
                 CactusSize::SMALL => {
-                    cactus = Cactus::new(CACTUS_SMALL_SIZE_X, CACTUS_SMALL_SIZE_Y, size, start_point_x);
+                    cactus = Cactus::new(
+                        CACTUS_SMALL_SIZE_X,
+                        CACTUS_SMALL_SIZE_Y,
+                        size,
+                        start_point_x,
+                    );
                     distance += CACTUS_SMALL_SIZE_X;
                 }
                 CactusSize::BIG => {
@@ -67,27 +74,24 @@ impl Cactus {
     pub fn get_max(&mut self) -> Coord {
         self.aabb.max
     }
+    #[warn(dead_code)]
     pub fn get_position(&self) -> Coord {
         self.aabb.min
     }
+    #[warn(dead_code)]
     pub fn get_sprite(&self) -> Sprite {
-        let mut sprite : Vec<char>;
-        let mut size : Coord;
+        let mut sprite: Vec<char>;
+        let mut size: Coord;
         match self.size {
             CactusSize::SMALL => {
-                sprite = vec![
-                    
-                ];
+                sprite = vec![];
                 size = Coord::new(CACTUS_SMALL_SIZE_X as f64, CACTUS_SMALL_SIZE_Y as f64);
             }
             CactusSize::BIG => {
-                sprite = vec![
-
-                ];
+                sprite = vec![];
                 size = Coord::new(CACTUS_BIG_SIZE_X as f64, CACTUS_BIG_SIZE_Y as f64);
             }
         }
         Sprite::new(sprite, size)
     }
-
 }
