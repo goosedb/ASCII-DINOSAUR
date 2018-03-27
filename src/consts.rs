@@ -12,7 +12,7 @@ pub const DINO_SIZE_Y: f64 = 8.0;
 pub const DINO_START_POS_X: f64 = 2.0;
 pub const DINO_START_POS_Y: f64 = GROUND - DINO_SIZE_Y;
 //==============================\\
-pub const DINO_ACCEL_SPEED_X: f64 = 0.07;
+pub const DINO_ACCEL_SPEED_X: f64 = 0.1;
 pub const DINO_START_SPEED_X: f64 = 20.0;
 pub const DINO_START_SPEED_Y: f64 = 0.0;
 pub const DINO_SPEED_OF_JUMP: f64 = -45.0;

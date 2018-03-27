@@ -40,11 +40,9 @@ impl Gamestate {
                 match e.code {
                     KeyCode::Up => {
                         self.dinosaur.up();
-                        println!("^");
                     }
                     KeyCode::Down => {
                         self.dinosaur.down();
-                        println!("v");
                     }
                     _ => {}
                 }

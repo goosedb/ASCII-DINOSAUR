@@ -26,6 +26,6 @@ fn main() {
         .init();
     while !window.window_closed() && !exit {
         game(&mut window, &mut renderer);
-        finish(&mut window, &mut renderer, &mut exit);
+        finish(&mut window, &mut exit);
     }
 }

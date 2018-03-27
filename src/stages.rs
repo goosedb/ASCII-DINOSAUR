@@ -35,7 +35,7 @@ pub fn game(window: &mut Root, renderer: &mut Renderer) {
     }
 }
 
-pub fn finish(window: &mut Root, renderer: &mut Renderer, exit: &mut bool) {
+pub fn finish(window: &mut Root, exit: &mut bool) {
     let gameover = ['G', 'A', 'M', 'E', ' ', 'O', 'V', 'E', 'R'];
     let alert = ['e','s','c',' ','t','o',' ','e','x','i','t',' ','e','n','t','e','r',' ','t','o',' ','t','r','y',' ','a','g','a','i','n'];
     for x in 0..gameover.len() {
