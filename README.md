@@ -1,2 +1,3 @@
 # Chrome Dinosaur in terminal 
-![Alt text](Dino.jpg)
+![img](Dino.jpg)
+![gif](Dino.gif)
